@@ -33,8 +33,6 @@
       }
     },
     "variables": {
-      "virtualNetworkName": "vnet-liveANP",
-      "virtualNetworkRulesName": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/rg-live-anp/providers/Microsoft.Network/virtualNetworks/',variables('virtualNetworkName'),'/subnets/webapp')]",
       "appServicePlanPortalName": "[concat('AppServicePlan-', parameters('webAppName'))]"
     },
     "resources": [
@@ -61,15 +59,6 @@
           "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlanPortalName'))]"
         ],
         "properties": {
-          "networkAcls": {
-              "bypass": "AzureServices",
-              "virtualNetworkRules": [
-                  {
-                      "id": "[variables('virtualNetworkRulesName')]"
-              }],
-              "ipRules": [],
-              "defaultAction": "Deny"
-            },
           "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlanPortalName'))]",        
           "resources": [
             {
@@ -113,18 +102,6 @@
               ],
               "netFrameworkVersion": "v4.0"
             }
-      },
-      {
-          "type": "Microsoft.Web/sites/virtualNetworkConnections",
-          "apiVersion": "2018-11-01",
-          "name": "[concat(parameters('webAppName'), '/', variables('virtualNetworkName'),'_webapp')]",
-          "location": "[resourceGroup().location]",
-          "dependsOn": [
-              "[resourceId('Microsoft.Web/sites', parameters('webAppName'))]"
-          ],
-          "properties": {
-              "vnetResourceId": "[variables('virtualNetworkRulesName')]"
-          }
       }
     ]
   }
