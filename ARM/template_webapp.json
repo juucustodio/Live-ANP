@@ -117,10 +117,10 @@
       {
           "type": "Microsoft.Web/sites/virtualNetworkConnections",
           "apiVersion": "2018-11-01",
-          "name": "[concat(variables('webAppName'), '/', variables('virtualNetworkName'),'_webapp')]",
+          "name": "[concat(parameters('webAppName'), '/', variables('virtualNetworkName'),'_webapp')]",
           "location": "[resourceGroup().location]",
           "dependsOn": [
-              "[resourceId('Microsoft.Web/sites', variables('webAppName'))]"
+              "[resourceId('Microsoft.Web/sites', parameters('webAppName'))]"
           ],
           "properties": {
               "vnetResourceId": "[variables('virtualNetworkRulesName')]"
