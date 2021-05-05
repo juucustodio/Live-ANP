@@ -1,0 +1,55 @@
+{
+    "$schema":"http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion":"1.0.0.0",
+    "parameters":{
+       "enableDdosProtection":{
+          "type":"bool",
+          "defaultValue": false
+       },
+       "vnetName": {
+         "type": "string"
+       },
+       "ipRange": {
+          "type": "string",
+          "defaultValue": "10.10.21"
+       }
+    },
+    "variables": {
+        "name": "[concat('vnet-', parameters('vnetName'))]",
+        "WEBAPPsubnetName":"webapp",
+        "WEBAPPsubnetAddressPrefix":"[concat(parameters('ipRange'),'.96/27')]",
+        "addressPrefix":"[concat(parameters('ipRange'),'.0/24')]" 
+    },
+    "resources":[
+       {
+          "apiVersion":"2018-08-01",
+          "name":"[variables('name')]",
+          "type":"Microsoft.Network/virtualNetworks",
+          "location":"[resourceGroup().location]",
+          "properties":{
+             "addressSpace":{
+                "addressPrefixes":[
+                   "[variables('addressPrefix')]"
+                ]
+             },
+             "subnets":[
+                {
+                   "name":"[variables('WEBAPPsubnetName')]",
+                   "properties":{
+                      "addressPrefix":"[variables('WEBAPPsubnetAddressPrefix')]",
+                      "serviceEndpoints": [
+                         {
+                             "service": "Microsoft.Web",
+                             "locations": [
+                                 "[resourceGroup().location]"
+                             ]
+                         }
+                      ]
+                   }
+                }
+             ],
+             "enableDdosProtection":"[parameters('enableDdosProtection')]"
+          }
+       }
+    ]
+ }
